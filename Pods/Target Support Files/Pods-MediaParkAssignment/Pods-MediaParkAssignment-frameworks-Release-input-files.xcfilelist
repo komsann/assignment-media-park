@@ -1,0 +1,5 @@
+${PODS_ROOT}/Target Support Files/Pods-MediaParkAssignment/Pods-MediaParkAssignment-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework
+${BUILT_PRODUCTS_DIR}/DatePicker/DatePicker.framework
+${BUILT_PRODUCTS_DIR}/Extended/Extended.framework
+${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework
