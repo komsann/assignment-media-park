@@ -6,6 +6,15 @@
 //
 
 struct ArticleResponse: Codable, Hashable {
-  let articles: [Article]
   let totalArticles: Int
+  let articles: [Article]
+  
+  init(with entity: ArticleListEntity) {
+    totalArticles = Int(entity.total)
+    
+    let articles = entity.articles?.allObjects as? [ArticleEntity] ?? []
+    self.articles = articles.compactMap {
+      Article(with: $0)
+    }
+  }
 }

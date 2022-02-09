@@ -34,6 +34,10 @@ class NewsViewController: UIViewController {
   }
   
   func initializeData() {
+    viewModel.synchronizeLocalStore {
+      self.tableView.reloadData()
+    }
+    
     viewModel.fetchData {
       self.tableView.reloadData()
     }

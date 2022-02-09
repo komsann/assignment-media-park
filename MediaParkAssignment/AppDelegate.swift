@@ -12,8 +12,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    UITabBar.appearance().tintColor = UIColor.primary
-    UITabBar.appearance().backgroundColor = UIColor.white
+
+    application.setupAppearances()
     
     let vc = UIStoryboard.main().instantiate(controller: MainViewController.self)
     window = UIWindow(frame: UIScreen.main.bounds)

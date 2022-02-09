@@ -11,4 +11,15 @@ struct Constants {
     static let Search = "Search"
     static let WebView = "WebView"
   }
+  
+  struct Entity {
+    static let ArticleReponse = "ArticleListEntity"
+  }
+  
+  struct Predicate {
+    struct Identifier {
+      static let Key = "identifier"
+      static let Value = "articleId"
+    }
+  }
 }

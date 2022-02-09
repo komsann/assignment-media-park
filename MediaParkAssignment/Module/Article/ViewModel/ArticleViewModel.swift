@@ -8,11 +8,31 @@
 final class ArticleViewModel {
   
   private let apiClient = ArticleAPIClient()
+  private let storageManager = StorageManager()
   
   var title: String = ""
   var searchText: String = ""
   var sortByRelevance: String = ""
-  var articles: [Article] = []
+  var articles: [Article] = [] {
+    didSet {
+      articles = articles.sorted {
+        if let lhs = $0.publishedAt.toDate,
+           let rhs = $1.publishedAt.toDate {
+          return lhs > rhs
+        }
+        return false
+      }
+    }
+  }
+  
+  func synchronizeLocalStore(completion: @escaping () -> Void) {
+    storageManager.fetch { response in
+      if let response = response {
+        self.articles = response.articles
+        completion()
+      }
+    }
+  }
   
   func updateRelevance(isSortBySelected: Bool) {
     sortByRelevance = isSortBySelected ? "relevance" : "publishedAt"
@@ -24,7 +44,7 @@ final class ArticleViewModel {
       switch result {
       case .success(let response):
         strongSelf.articles = response.articles
-        completion()
+        strongSelf.storageManager.saveOrUpdate(with: response, completion: completion)
       case .failure:
         break
       }

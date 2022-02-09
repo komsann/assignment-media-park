@@ -13,8 +13,6 @@ class SearchHeaderView: UIView {
   @IBOutlet weak var filterView: UIView!
   @IBOutlet weak var sortByView: SortByButton!
   
-  
-  
   var filterDidTap: (() -> Void)?
   var sortByDidTap: (() -> Void)?
   

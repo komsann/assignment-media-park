@@ -19,6 +19,7 @@ extension ResponseLoader {
       reponseParser.parse(data: data)
     case .failure(let error):
       debugError(with: error)
+      reponseParser.handleError(error: error)
     }
   }
 }
