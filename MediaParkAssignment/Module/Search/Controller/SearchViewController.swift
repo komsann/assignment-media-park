@@ -94,7 +94,9 @@ extension SearchViewController: UITableViewDataSource {
 
 extension SearchViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+    let vc = UIStoryboard.webView().instantiate(controller: WebViewController.self)
+    vc.urlstring = articleViewModel.articles[indexPath.row].url
+    navigationController?.pushViewController(vc, animated: true)
   }
 }
 
