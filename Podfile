@@ -6,4 +6,5 @@ target 'MediaParkAssignment' do
   pod 'Alamofire'
   pod 'DatePicker', '~> 1.3.0'
   pod 'RxSwift'
+  pod 'RxCocoa'
 end

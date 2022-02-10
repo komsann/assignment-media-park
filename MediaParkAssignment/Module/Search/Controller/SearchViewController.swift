@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class SearchViewController: UIViewController {
   @IBOutlet weak var searchHeaderView: SearchHeaderView! {
@@ -21,6 +23,7 @@ class SearchViewController: UIViewController {
     }
   }
   
+  private let disposeBag = DisposeBag()
   private let headerView = ArticleHeaderView()
   var articleViewModel: ArticleViewModel = ArticleViewModel()
   var filterViewModel: FilterViewModel = FilterViewModel()
@@ -29,6 +32,7 @@ class SearchViewController: UIViewController {
     super.viewDidLoad()
     setupAction()
     setupView()
+    setupSearch()
   }
   
   func setupView() {
@@ -36,6 +40,20 @@ class SearchViewController: UIViewController {
     headerView.frame.size.height = 80
     tableView.tableHeaderView = headerView
     navigationController?.isNavigationBarHidden = true
+  }
+  
+  func setupSearch() {
+    searchHeaderView
+      .searchBarTextField
+      .rx
+      .text
+      .orEmpty
+      .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+      .subscribe(onNext: { [weak self] text in
+        guard let strongSelf = self else { return }
+        strongSelf.articleViewModel.searchText = text
+        strongSelf.performSearch(with: text)
+      }).disposed(by: disposeBag)
   }
   
   func setupAction() {
@@ -52,17 +70,6 @@ class SearchViewController: UIViewController {
       )
       self.performSearch(with: self.articleViewModel.searchText)
     }
-    
-    searchHeaderView.textFieldDidChanged = { [weak self] value in
-      self?.articleViewModel.searchText = value
-      self?.searching(value)
-    }
-  }
-  
-  
-  func searching(_ searchText: String) {
-    NSObject.cancelPreviousPerformRequests(withTarget: self)
-    perform(#selector(performSearch(with:)), with: searchText, afterDelay: 0.5)
   }
   
   @objc

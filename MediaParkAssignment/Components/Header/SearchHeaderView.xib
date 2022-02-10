@@ -12,7 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchHeaderView" customModule="MediaParkAssignment" customModuleProvider="target">
             <connections>
                 <outlet property="filterView" destination="UaY-ND-JNn" id="8UE-kA-T63"/>
-                <outlet property="searchTextField" destination="WYU-Qs-4WG" id="H5R-6f-EzY"/>
+                <outlet property="searchStackView" destination="bam-ct-aUD" id="7cv-eU-dF6"/>
                 <outlet property="searchView" destination="B2J-wO-2ez" id="lD8-gL-sta"/>
                 <outlet property="sortByView" destination="rhh-Mv-bJj" id="47e-Yd-y1l"/>
             </connections>
@@ -35,27 +35,22 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B2J-wO-2ez">
                             <rect key="frame" x="0.0" y="0.0" width="262" height="46"/>
                             <subviews>
-                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WYU-Qs-4WG">
-                                    <rect key="frame" x="38" y="0.0" width="224" height="46"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                    <textInputTraits key="textInputTraits"/>
-                                    <connections>
-                                        <action selector="textFieldDidChanged:" destination="-1" eventType="editingChanged" id="JG3-kz-ABQ"/>
-                                    </connections>
-                                </textField>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_search" translatesAutoresizingMaskIntoConstraints="NO" id="Veh-Fm-hbZ">
                                     <rect key="frame" x="12" y="15" width="16" height="16"/>
                                 </imageView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bam-ct-aUD">
+                                    <rect key="frame" x="38" y="0.0" width="224" height="46"/>
+                                </stackView>
                             </subviews>
                             <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                             <constraints>
-                                <constraint firstAttribute="trailing" secondItem="WYU-Qs-4WG" secondAttribute="trailing" id="5to-pA-fpy"/>
+                                <constraint firstAttribute="trailing" secondItem="bam-ct-aUD" secondAttribute="trailing" id="0od-iy-hlH"/>
                                 <constraint firstItem="Veh-Fm-hbZ" firstAttribute="leading" secondItem="B2J-wO-2ez" secondAttribute="leading" constant="12" id="Bvb-PL-zZJ"/>
                                 <constraint firstAttribute="height" constant="46" id="N3W-ag-G6D"/>
-                                <constraint firstItem="WYU-Qs-4WG" firstAttribute="top" secondItem="B2J-wO-2ez" secondAttribute="top" id="O6n-d6-NqK"/>
                                 <constraint firstItem="Veh-Fm-hbZ" firstAttribute="centerY" secondItem="B2J-wO-2ez" secondAttribute="centerY" id="cqK-TW-Go4"/>
-                                <constraint firstItem="WYU-Qs-4WG" firstAttribute="leading" secondItem="Veh-Fm-hbZ" secondAttribute="trailing" constant="10" id="hN2-Ss-xs6"/>
-                                <constraint firstAttribute="bottom" secondItem="WYU-Qs-4WG" secondAttribute="bottom" id="sAU-xS-oak"/>
+                                <constraint firstItem="bam-ct-aUD" firstAttribute="top" secondItem="B2J-wO-2ez" secondAttribute="top" id="iXJ-Sy-fMh"/>
+                                <constraint firstAttribute="bottom" secondItem="bam-ct-aUD" secondAttribute="bottom" id="nia-jD-WLW"/>
+                                <constraint firstItem="bam-ct-aUD" firstAttribute="leading" secondItem="Veh-Fm-hbZ" secondAttribute="trailing" constant="10" id="r7P-Wp-PzD"/>
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="HO5-Zi-0hL">

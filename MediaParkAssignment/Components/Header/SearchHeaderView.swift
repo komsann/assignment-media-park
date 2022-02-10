@@ -9,9 +9,11 @@ import UIKit
 
 class SearchHeaderView: UIView {
   @IBOutlet weak var searchView: UIView!
-  @IBOutlet weak var searchTextField: UITextField!
+  @IBOutlet weak var searchStackView: UIStackView!
   @IBOutlet weak var filterView: UIView!
   @IBOutlet weak var sortByView: SortByButton!
+  
+  let searchBarTextField = UITextField()
   
   var filterDidTap: (() -> Void)?
   var sortByDidTap: (() -> Void)?
@@ -36,6 +38,13 @@ class SearchHeaderView: UIView {
     setCorner(25.0, borderWidth: 1.0)
     setShadow(30, opacity: 0.6)
     customizeSearchView()
+    setupSearchBar()
+  }
+  
+  func setupSearchBar() {
+    searchBarTextField.placeholder = "Search"
+    searchBarTextField.borderStyle = .none
+    searchStackView.addArrangedSubview(searchBarTextField)
   }
   
   func setupAction() {
@@ -56,11 +65,6 @@ class SearchHeaderView: UIView {
         borderWidth: 0
       )
     }
-  }
-  
-  @IBAction func textFieldDidChanged(_ sender: UITextField) {
-    let text = sender.text ?? ""
-    textFieldDidChanged?(text)
   }
   
   
