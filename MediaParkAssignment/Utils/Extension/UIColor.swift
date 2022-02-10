@@ -14,4 +14,8 @@ extension UIColor {
   class var primary: UIColor {
     return UIColor(r: 246, g: 143, b: 84, a: 1)
   }
+  
+  class var secondaryBg: UIColor {
+    return UIColor(r: 229, g: 229, b: 229, a: 1)
+  }
 }

@@ -24,28 +24,26 @@
                                     <constraint firstAttribute="height" priority="999" constant="100" id="fNY-ZI-jAf"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="pDN-Sg-Qfe">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="okJ-n9-Q97">
                                 <rect key="frame" x="0.0" y="100" width="414" height="713"/>
-                                <color key="backgroundColor" red="0.89803921568627454" green="0.89803921568627454" blue="0.89803921568627454" alpha="1" colorSpace="calibratedRGB"/>
-                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </tableView>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hb5-90-3nc"/>
                         <color key="backgroundColor" red="0.89803921568627454" green="0.89803921568627454" blue="0.89803921568627454" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="um0-h1-g7Y" firstAttribute="leading" secondItem="hb5-90-3nc" secondAttribute="leading" id="47D-fX-yZo"/>
-                            <constraint firstItem="hb5-90-3nc" firstAttribute="bottom" secondItem="pDN-Sg-Qfe" secondAttribute="bottom" id="O6W-Tk-oyD"/>
-                            <constraint firstItem="pDN-Sg-Qfe" firstAttribute="top" secondItem="um0-h1-g7Y" secondAttribute="bottom" id="Yfs-UB-fhC"/>
+                            <constraint firstItem="okJ-n9-Q97" firstAttribute="top" secondItem="um0-h1-g7Y" secondAttribute="bottom" id="FzD-hV-5hR"/>
+                            <constraint firstItem="hb5-90-3nc" firstAttribute="bottom" secondItem="okJ-n9-Q97" secondAttribute="bottom" id="HIC-qL-g9z"/>
+                            <constraint firstItem="hb5-90-3nc" firstAttribute="trailing" secondItem="okJ-n9-Q97" secondAttribute="trailing" id="cxG-O5-Zqv"/>
                             <constraint firstItem="hb5-90-3nc" firstAttribute="trailing" secondItem="um0-h1-g7Y" secondAttribute="trailing" id="erS-Od-8TR"/>
-                            <constraint firstItem="pDN-Sg-Qfe" firstAttribute="leading" secondItem="hb5-90-3nc" secondAttribute="leading" id="nEw-BM-2PP"/>
-                            <constraint firstItem="hb5-90-3nc" firstAttribute="trailing" secondItem="pDN-Sg-Qfe" secondAttribute="trailing" id="wme-2c-8PS"/>
+                            <constraint firstItem="okJ-n9-Q97" firstAttribute="leading" secondItem="hb5-90-3nc" secondAttribute="leading" id="zfj-oq-9pk"/>
                             <constraint firstItem="um0-h1-g7Y" firstAttribute="top" secondItem="jAA-ek-Gb4" secondAttribute="top" id="zjH-7r-L12"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Z2p-nP-SdQ"/>
                     <connections>
                         <outlet property="mainHeaderView" destination="um0-h1-g7Y" id="Sx1-HM-51z"/>
-                        <outlet property="tableView" destination="pDN-Sg-Qfe" id="UCc-AF-4cj"/>
+                        <outlet property="stackView" destination="okJ-n9-Q97" id="iMj-N1-I8m"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Yfa-gd-gvl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

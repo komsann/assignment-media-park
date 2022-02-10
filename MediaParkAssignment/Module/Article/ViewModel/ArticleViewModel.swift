@@ -16,22 +16,12 @@ final class ArticleViewModel {
   var title: String = ""
   var searchText: String = ""
   var sortByRelevance: String = ""
-  var articles: [Article] = [] {
-    didSet {
-      articles = articles.sorted {
-        if let lhs = $0.publishedAt.toDate,
-           let rhs = $1.publishedAt.toDate {
-          return lhs > rhs
-        }
-        return false
-      }
-    }
-  }
+  let articles = PublishSubject<[Article]>()
   
   func synchronizeLocalStore(completion: @escaping () -> Void) {
     storageManager.fetch { response in
       if let response = response {
-        self.articles = response.articles
+        self.articles.onNext(response.articles)
         completion()
       }
     }
@@ -46,8 +36,8 @@ final class ArticleViewModel {
       guard let strongSelf = self else { return }
       switch result {
       case .next(let response):
-        strongSelf.articles = response.articles
         strongSelf.storageManager.saveOrUpdate(with: response, completion: completion)
+        strongSelf.articles.onNext(response.articles)
       case .completed:
         completion()
       case .error(_):
@@ -67,8 +57,9 @@ final class ArticleViewModel {
           guard let strongSelf = self else { return }
           switch result {
           case .next(let response):
-            strongSelf.articles = response.articles
+            strongSelf.articles.onNext(response.articles)
             strongSelf.title = "\(response.totalArticles) News"
+            break
           case .completed:
             completion()
           case .error(_):

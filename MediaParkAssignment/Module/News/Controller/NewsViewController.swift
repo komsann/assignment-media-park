@@ -7,61 +7,63 @@
 
 import UIKit
 
-class NewsViewController: UIViewController {
+import RxSwift
+import RxCocoa
+
+class NewsViewController: UIViewController, UIScrollViewDelegate {
   
   private let viewModel = ArticleViewModel()
   private let headerView = ArticleHeaderView()
+  private let disposeBag = DisposeBag()
   
   @IBOutlet weak var mainHeaderView: MainHeaderView! {
     didSet {
       mainHeaderView.setCorner(25.0, borderWidth: 0.0)
     }
   }
-  @IBOutlet weak var tableView: UITableView! {
-    didSet {
-      tableView.delegate = self
-      tableView.dataSource = self
-      tableView.register(nibCell: ArticleViewCell.self)
-    }
-  }
+  @IBOutlet weak var stackView: UIStackView!
+  private var tableView = UITableView()
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupTableView()
     initializeData()
-    headerView.frame.size.height = 80
-    tableView.tableHeaderView = headerView
     navigationController?.isNavigationBarHidden = true
   }
   
-  func initializeData() {
-    viewModel.synchronizeLocalStore {
-      self.tableView.reloadData()
-    }
+  func setupTableView() {
+    tableView.rx.setDelegate(self).disposed(by: disposeBag)
+    tableView.register(nibCell: ArticleViewCell.self)
+    tableView.backgroundColor = .secondaryBg
+    stackView.addArrangedSubview(tableView)
     
-    viewModel.fetchData {
-      self.tableView.reloadData()
-    }
-  }
-}
-
-extension NewsViewController: UITableViewDataSource {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return viewModel.articles.count
+    headerView.frame.size.height = 80
+    tableView.tableHeaderView = headerView
   }
   
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeue(cell: ArticleViewCell.self, at: indexPath)
-    let data = viewModel.articles[indexPath.row]
-    cell.update(with: data)
-    return cell
+  func initializeData() {
+    viewModel.articles
+      .map {
+        $0.sorted {
+          if let lhs = $0.publishedAt.toDate,
+             let rhs = $1.publishedAt.toDate {
+            return lhs > rhs
+          }
+          return false
+        }
+      }
+      .bind(
+        to: tableView
+          .rx
+          .items(
+            cellIdentifier: ArticleViewCell.reuseIdentifier(),
+            cellType: ArticleViewCell.self
+          )
+      ) { row, item, cell in
+        cell.update(with: item)
+      }.disposed(by: disposeBag)
+    
+    viewModel.synchronizeLocalStore {}
+    viewModel.fetchData {}
   }
 }
-
-extension NewsViewController: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let vc = UIStoryboard.webView().instantiate(controller: WebViewController.self)
-    vc.urlstring = viewModel.articles[indexPath.row].url
-    navigationController?.pushViewController(vc, animated: true)
-  }
-}
-

@@ -9,19 +9,16 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SearchViewController: UIViewController {
+class SearchViewController: UIViewController, UIScrollViewDelegate {
   @IBOutlet weak var searchHeaderView: SearchHeaderView! {
     didSet {
       searchHeaderView.setCorner(25.0, borderWidth: 0.0)
     }
   }
-  @IBOutlet weak var tableView: UITableView! {
-    didSet {
-      tableView.dataSource = self
-      tableView.delegate = self
-      tableView.register(nibCell: ArticleViewCell.self)
-    }
-  }
+  
+  @IBOutlet weak var stackView: UIStackView!
+  
+  private var tableView = UITableView()
   
   private let disposeBag = DisposeBag()
   private let headerView = ArticleHeaderView()
@@ -33,13 +30,23 @@ class SearchViewController: UIViewController {
     setupAction()
     setupView()
     setupSearch()
+    dataBinding()
   }
   
   func setupView() {
+    setupTableView()
+    navigationController?.isNavigationBarHidden = true
+  }
+  
+  func setupTableView() {
+    tableView.rx.setDelegate(self).disposed(by: disposeBag)
+    tableView.register(nibCell: ArticleViewCell.self)
+    tableView.backgroundColor = .secondaryBg
+    stackView.addArrangedSubview(tableView)
+    
     headerView.setTitle(articleViewModel.title)
     headerView.frame.size.height = 80
     tableView.tableHeaderView = headerView
-    navigationController?.isNavigationBarHidden = true
   }
   
   func setupSearch() {
@@ -72,6 +79,30 @@ class SearchViewController: UIViewController {
     }
   }
   
+  func dataBinding() {
+    articleViewModel
+      .articles
+      .map {
+        $0.sorted {
+          if let lhs = $0.publishedAt.toDate,
+             let rhs = $1.publishedAt.toDate {
+            return lhs > rhs
+          }
+          return false
+        }
+      }
+      .bind(
+        to: tableView
+          .rx
+          .items(
+            cellIdentifier: ArticleViewCell.reuseIdentifier(),
+            cellType: ArticleViewCell.self
+          )
+      ) { row, item, cell in
+        cell.update(with: item)
+      }.disposed(by: disposeBag)
+  }
+  
   @objc
   func performSearch(with text: String) {
     articleViewModel.search(filterVM: filterViewModel) {
@@ -85,27 +116,13 @@ class SearchViewController: UIViewController {
   }
 }
 
-// MARK: - TableView
-extension SearchViewController: UITableViewDataSource {
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return articleViewModel.articles.count
-  }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let cell = tableView.dequeue(cell: ArticleViewCell.self, at: indexPath)
-    let vm = articleViewModel.articles[indexPath.row]
-    cell.update(with: vm)
-    return cell
-  }
-}
-
-extension SearchViewController: UITableViewDelegate {
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let vc = UIStoryboard.webView().instantiate(controller: WebViewController.self)
-    vc.urlstring = articleViewModel.articles[indexPath.row].url
-    navigationController?.pushViewController(vc, animated: true)
-  }
-}
+//extension SearchViewController: UITableViewDelegate {
+//  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//    let vc = UIStoryboard.webView().instantiate(controller: WebViewController.self)
+//    vc.urlstring = articleViewModel.articles[indexPath.row].url
+//    navigationController?.pushViewController(vc, animated: true)
+//  }
+//}
 
 // MARK: - FilterViewControllerDelegate
 extension SearchViewController: FilterViewControllerDelegate {
