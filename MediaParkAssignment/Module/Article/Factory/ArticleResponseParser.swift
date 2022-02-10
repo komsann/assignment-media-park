@@ -6,23 +6,25 @@
 //
 
 import Alamofire
+import RxSwift
 
 struct ArticleResponseParser {
-  let completion: (Result<ArticleResponse>) -> Void
+  let observer: AnyObserver<ArticleResponse>
 }
 
 extension ArticleResponseParser: ResponseParserProtocol {
   func parse(data: Data) {
     do {
       let response = try JSONDecoder().decode(ArticleResponse.self, from: data)
-      completion(Result<ArticleResponse>.success(response))
+      observer.onNext(response)
+      observer.onCompleted()
     } catch {
-      debugPrint(error)
+      observer.onError(error)
     }
   }
   
   func handleError(error: Error) {
-    completion(Result<ArticleResponse>.failure(error))
+    observer.onError(error)
   }
   
   func handleInvalidResponse(_ response: Data, error: Error?) {}

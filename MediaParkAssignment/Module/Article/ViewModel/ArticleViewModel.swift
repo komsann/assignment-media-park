@@ -5,10 +5,13 @@
 //  Created by Komsann Ly on 6/2/22.
 //
 
+import RxSwift
+
 final class ArticleViewModel {
   
   private let apiClient = ArticleAPIClient()
   private let storageManager = StorageManager()
+  private let disposeBag = DisposeBag()
   
   var title: String = ""
   var searchText: String = ""
@@ -39,34 +42,39 @@ final class ArticleViewModel {
   }
   
   func fetchData(completion: @escaping () -> Void) {
-    apiClient.getArticle { [weak self] result in
+    apiClient.getArticle().subscribe { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
-      case .success(let response):
+      case .next(let response):
         strongSelf.articles = response.articles
         strongSelf.storageManager.saveOrUpdate(with: response, completion: completion)
-      case .failure:
+      case .completed:
+        completion()
+      case .error(_):
         break
       }
-    }
+    }.disposed(by: disposeBag)
   }
   
   func search(filterVM: FilterViewModel,
               completion: @escaping () -> Void) {
     if !searchText.isEmpty {
-      apiClient.search(with: searchText,
-                       sortByRelevance: sortByRelevance,
-                       filterVM: filterVM) { [weak self] result in
-        guard let strongSelf = self else { return }
-        switch result {
-        case .success(let response):
-          strongSelf.articles = response.articles
-          strongSelf.title = "\(response.totalArticles) News"
-          completion()
-        case .failure:
-          break
-        }
-      }
+      apiClient
+        .search(with: searchText,
+                sortByRelevance: sortByRelevance,
+                filterVM: filterVM)
+        .subscribe { [weak self] result in
+          guard let strongSelf = self else { return }
+          switch result {
+          case .next(let response):
+            strongSelf.articles = response.articles
+            strongSelf.title = "\(response.totalArticles) News"
+          case .completed:
+            completion()
+          case .error(_):
+            break
+          }
+        }.disposed(by: disposeBag)
     }
   }
 }

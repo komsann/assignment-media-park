@@ -13,7 +13,7 @@ struct ResponseLoader {
 }
 
 extension ResponseLoader {
-  func parse(response: DataResponse<Data>) {
+  func parse(response: AFDataResponse<Data>) {
     switch response.result {
     case .success(let data):
       reponseParser.parse(data: data)

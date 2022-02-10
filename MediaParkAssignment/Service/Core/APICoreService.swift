@@ -27,7 +27,7 @@ final class APICoreService: APICoreServiceProtocol {
       let method = requestBuilder.method
       let parameters = requestBuilder.parameters
       let encoding = requestBuilder.encoding
-      let networkManager = Alamofire.SessionManager.default
+      let networkManager = Session.default
       
       let loader = ResponseLoader(requestBuilder: requestBuilder,
                                   reponseParser: reponseParser)
