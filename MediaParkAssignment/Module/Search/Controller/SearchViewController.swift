@@ -47,6 +47,7 @@ class SearchViewController: UIViewController, UIScrollViewDelegate {
     headerView.setTitle(articleViewModel.title)
     headerView.frame.size.height = 80
     tableView.tableHeaderView = headerView
+    tableViewSelection()
   }
   
   func setupSearch() {
@@ -114,15 +115,23 @@ class SearchViewController: UIViewController, UIScrollViewDelegate {
     headerView.setTitle(articleViewModel.title)
     tableView.reloadData()
   }
+  
+  func tableViewSelection() {
+    tableView.rx.modelSelected(Article.self).subscribe { [weak self] result in
+      guard let strongSelf = self else { return }
+      switch result {
+      case .next(let article):
+        let vc = UIStoryboard.webView().instantiate(controller: WebViewController.self)
+        vc.urlstring = article.url
+        strongSelf.navigationController?.pushViewController(vc, animated: true)
+      case .completed:
+        break
+      case .error(_):
+        break
+      }
+    }.disposed(by: disposeBag)
+  }
 }
-
-//extension SearchViewController: UITableViewDelegate {
-//  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//    let vc = UIStoryboard.webView().instantiate(controller: WebViewController.self)
-//    vc.urlstring = articleViewModel.articles[indexPath.row].url
-//    navigationController?.pushViewController(vc, animated: true)
-//  }
-//}
 
 // MARK: - FilterViewControllerDelegate
 extension SearchViewController: FilterViewControllerDelegate {
